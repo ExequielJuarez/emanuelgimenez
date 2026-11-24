@@ -1,0 +1,203 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<%# ═════════ 1. Portada con foto + botones "Ver stock" y "Vender" ═════════ %>
+<section id="inicio" class="portada">
+  <picture class="portada__fondo">
+    <source media="(max-width: 640px)" srcset="/img/portada/portada-chica.webp">
+    <img src="/img/portada/portada.webp" alt="" width="1600" height="1067" fetchpriority="high" decoding="async">
+  </picture>
+  <div class="portada__degrade"></div>
+
+  <div class="contenedor portada__contenido">
+    <span class="insignia"><span class="insignia__punto"></span>Usados Seleccionados &bull; 0km Multimarca</span>
+    <h1>Concesionaria <span>Automotor</span></h1>
+    <p>Vehículos verificados y listos para transferir en el acto. Tomamos tu usado en parte de pago y financiamos hasta en 48 cuotas fijas.</p>
+
+    <div class="portada__botones">
+      <a href="#vehiculos-disp" class="btn-portada btn-portada--naranja" data-ver-todo><%- icono('car') %><span>Ver Stock</span></a>
+      <button type="button" class="btn-portada btn-portada--blanco" data-asesor="Quiero Vender / Entregar mi Vehículo"><%- icono('badge-dollar-sign', 'icono--naranja') %><span>Vender</span></button>
+    </div>
+  </div>
+</section>
+
+<%# ═════════ 2. Carrusel de destacados (flechas + deslizar con el dedo) ═════════ %>
+<section id="destacados" class="contenedor seccion seccion--destacados">
+  <div class="seccion__cab">
+    <div>
+      <span class="sobretitulo sobretitulo--naranja">Unidades Seleccionadas</span>
+      <h2 class="titulo-seccion">Destacados</h2>
+    </div>
+    <div class="flechas">
+      <button type="button" class="flecha" data-carrusel="-1" aria-label="Anterior destacado"><%- icono('chevron-left') %></button>
+      <button type="button" class="flecha" data-carrusel="1" aria-label="Siguiente destacado"><%- icono('chevron-right') %></button>
+    </div>
+  </div>
+
+  <div class="carrusel" id="carrusel" tabindex="0" aria-label="Vehículos destacados">
+    <% destacados.forEach(v => { %>
+      <%- include('partials/tarjeta-destacado', { v }) %>
+    <% }) %>
+  </div>
+</section>
+
+<%# ═════════ 3. Vehículos disponibles: buscador, filtros, orden y grilla ═════════ %>
+<section id="vehiculos-disp" class="contenedor seccion seccion--stock">
+  <div class="seccion__cab">
+    <div>
+      <span class="sobretitulo sobretitulo--naranja">Stock Actualizado</span>
+      <h2 class="titulo-seccion">Vehículos disp.</h2>
+    </div>
+    <button type="button" class="btn-ver-todo" id="btnVerTodo" aria-controls="grilla" aria-expanded="false">
+      <span id="btnVerTodoTexto">Ver todo</span><%- icono('arrow-right') %>
+    </button>
+  </div>
+
+  <form class="buscador" id="buscador" role="search" action="/#vehiculos-disp" onsubmit="return false">
+    <div class="buscador__fila">
+      <label class="buscador__campo">
+        <span class="sr-only">Buscar por marca, modelo o versión</span>
+        <%- icono('search') %>
+        <input type="search" id="fBuscar" placeholder="Marca, modelo o versión" autocomplete="off" enterkeyhint="search">
+      </label>
+      <button type="submit" class="buscador__btn">Buscar</button>
+    </div>
+
+    <div>
+      <button type="button" class="buscador__filtros-btn" id="btnFiltros" aria-expanded="false" aria-controls="panelFiltros">
+        <%- icono('sliders', 'icono--naranja') %><span>Filtros</span><span class="buscador__contador" id="contadorFiltros" hidden></span><%- icono('chevron-down', 'buscador__chevron') %>
+      </button>
+
+      <div class="filtros" id="panelFiltros" hidden>
+        <div class="filtros__grupo">
+          <label for="fMarca">Marca</label>
+          <select id="fMarca">
+            <option value="">Todas las marcas</option>
+            <% opciones.marcas.forEach(m => { %><option value="<%= m %>"><%= m %></option><% }) %>
+          </select>
+        </div>
+
+        <div class="filtros__grupo">
+          <span class="filtros__etiqueta">Precio</span>
+          <div class="filtros__par">
+            <label class="filtros__precio">
+              <span aria-hidden="true">$</span>
+              <input type="number" id="fPrecioMin" placeholder="Desde" inputmode="numeric" min="0" aria-label="Precio desde">
+            </label>
+            <label class="filtros__precio">
+              <span aria-hidden="true">$</span>
+              <input type="number" id="fPrecioMax" placeholder="Hasta" inputmode="numeric" min="0" aria-label="Precio hasta">
+            </label>
+          </div>
+        </div>
+
+        <div class="filtros__grupo">
+          <span class="filtros__etiqueta">Año</span>
+          <div class="filtros__par">
+            <select id="fAnioMin" aria-label="Año desde">
+              <option value="">Desde</option>
+              <% [...opciones.anios].reverse().forEach(a => { %><option value="<%= a %>"><%= a %></option><% }) %>
+            </select>
+            <select id="fAnioMax" aria-label="Año hasta">
+              <option value="">Hasta</option>
+              <% opciones.anios.forEach(a => { %><option value="<%= a %>"><%= a %></option><% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="filtros__pie">
+          <button type="button" class="filtros__limpiar" data-limpiar>Limpiar todos los filtros</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="buscador__resultado">
+      <p aria-live="polite"><strong id="contador"><%= vehiculos.length %></strong> vehículos encontrados</p>
+      <select id="fOrden" aria-label="Ordenar">
+        <% opciones.ordenes.forEach(o => { %><option value="<%= o.valor %>"><%= o.texto %></option><% }) %>
+      </select>
+    </div>
+  </form>
+
+  <div class="grilla" id="grilla" data-vista-previa="<%= vistaPrevia %>">
+    <% vehiculos.forEach((v, i) => { %>
+      <%- include('partials/tarjeta-vehiculo', { v, i }) %>
+    <% }) %>
+  </div>
+
+  <div class="ver-mas" id="verMas">
+    <button type="button" class="btn-ver-mas" data-ver-todo>
+      <span>Ver todo el stock disponible</span><%- icono('chevron-down', 'icono--naranja') %>
+    </button>
+  </div>
+
+  <div class="sin-resultados" id="sinResultados" hidden>
+    <div class="sin-resultados__icono"><%- icono('search-x') %></div>
+    <h3>No encontramos vehículos con esos filtros</h3>
+    <p>Probá modificando la búsqueda o consultá directamente con nuestro equipo.</p>
+    <div class="sin-resultados__botones">
+      <button type="button" class="btn btn--gris" data-limpiar>Limpiar filtros</button>
+      <button type="button" class="btn btn--naranja" data-asesor="Búsqueda Personalizada de Vehículo">Consultar con asesor</button>
+    </div>
+  </div>
+</section>
+
+<%# ═════════ 4. Banner: vender o entregar tu usado ═════════ %>
+<section id="consignaciones" class="contenedor seccion seccion--vender">
+  <div class="vender">
+    <div class="vender__texto">
+      <span class="vender__insignia">Plan Llave contra Llave</span>
+      <h2>¿Querés vender o entregar tu usado en parte de pago?</h2>
+      <p>Cotizamos tu auto en el acto con la mejor tasación del mercado y gestoría propia incluida.</p>
+    </div>
+    <button type="button" class="btn btn--naranja btn--grande vender__btn" data-asesor="Cotización para Vender o Entregar mi Vehículo"><%- icono('message-circle') %>Consultar con asesor</button>
+  </div>
+</section>
+
+<%# ═════════ 5. Clientes: fotos de entregas (se cargan desde el panel) ═════════ %>
+<% if (clientes.length) { %>
+<section id="clientes" class="contenedor seccion seccion--clientes">
+  <div class="seccion__cab">
+    <div>
+      <span class="sobretitulo sobretitulo--naranja">Entregas recientes</span>
+      <h2 class="titulo-seccion">Familias que confían en nosotros</h2>
+    </div>
+    <% if (clientes.length > 1) { %>
+      <div class="flechas flechas--clientes">
+        <button type="button" class="flecha" data-clientes="-1" aria-label="Fotos anteriores"><%- icono('chevron-left') %></button>
+        <button type="button" class="flecha" data-clientes="1" aria-label="Fotos siguientes"><%- icono('chevron-right') %></button>
+      </div>
+    <% } %>
+  </div>
+
+  <ul class="clientes" id="clientesLista">
+    <% clientes.forEach((c, i) => { %>
+      <li class="cliente">
+        <button type="button" class="cliente__foto" data-cliente="<%= i %>" aria-label="Ver foto<%= c.titulo ? ': ' + c.titulo : '' %>">
+          <img src="<%= c.url %>" alt="<%= c.titulo ? `Entrega a ${c.titulo}` : 'Cliente de Emanuel Gimenez Automotores' %>" loading="lazy" decoding="async" width="820" height="1024">
+        </button>
+      </li>
+    <% }) %>
+  </ul>
+</section>
+
+<%# Visor de fotos de clientes %>
+<div class="modal visor" id="modalCliente" role="dialog" aria-modal="true" aria-label="Foto de cliente" hidden>
+  <div class="visor__caja">
+    <img id="visorImg" src="" alt="">
+    <button type="button" class="ficha__cerrar" data-cerrar aria-label="Cerrar"><%- icono('x') %></button>
+    <% if (clientes.length > 1) { %>
+      <button type="button" class="ficha__flecha ficha__flecha--izq" data-visor="-1" aria-label="Foto anterior"><%- icono('chevron-left') %></button>
+      <button type="button" class="ficha__flecha ficha__flecha--der" data-visor="1" aria-label="Foto siguiente"><%- icono('chevron-right') %></button>
+    <% } %>
+  </div>
+</div>
+<script type="application/json" id="datosClientes"><%- JSON.stringify(clientes.map(c => ({ url: c.url, titulo: c.titulo || '' }))).replace(/</g, '\\u003c') %></script>
+<% } %>
+
+<%- include('partials/modal-ficha') %>
+
+<%# Datos de las fichas para el JS (el < se escapa para que no corte el script) %>
+<script type="application/json" id="datosFichas"><%- JSON.stringify(fichas).replace(/</g, '\\u003c') %></script>
+
+<%- include('partials/footer') %>

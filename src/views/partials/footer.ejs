@@ -1,0 +1,30 @@
+</main>
+<% const c = concesionaria; %>
+
+<%# ═════════ Pie azul cobalto ═════════ %>
+<footer class="footer" id="contacto">
+  <div class="contenedor">
+    <div class="footer__arriba">
+      <div class="footer__marca">
+        <p class="footer__nombre">EMANUEL GIMENEZ</p>
+        <p class="footer__sub">AUTOMOTORES</p>
+        <p class="footer__horario"><%= c.horarios %> &bull; <%= c.sabados %></p>
+      </div>
+      <div class="footer__botones">
+        <a href="<%= c.instagram %>" target="_blank" rel="noopener noreferrer" class="btn btn--azul"><%- icono('instagram', 'icono--naranja') %>Instagram</a>
+        <button type="button" class="btn btn--naranja" data-asesor="Consulta General desde Contacto"><%- icono('message-circle') %>Consultar con asesor</button>
+      </div>
+    </div>
+    <div class="footer__abajo">
+      <p>&copy; <%= new Date().getFullYear() %> <%= c.nombre %>. Todos los derechos reservados.</p>
+      <p><%= c.pais %></p>
+    </div>
+  </div>
+</footer>
+
+<%- include('modal-asesor') %>
+
+<script src="/js/base.js"></script>
+<% if (locals.script) { %><script src="/js/<%= script %>.js"></script><% } %>
+</body>
+</html>

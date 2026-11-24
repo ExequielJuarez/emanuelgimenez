@@ -1,0 +1,77 @@
+<%- include('../partials/admin-inicio') %>
+<% const textos = { nueva: 'Nuevas', contactado: 'Contactados', cerrada: 'Cerradas' }; %>
+
+<div class="adm-cab">
+  <div>
+    <h1>Consultas</h1>
+    <p>Lo que la gente mandó desde “Consultar con asesor”.</p>
+  </div>
+</div>
+
+<form class="adm-filtros" method="GET" action="/admin/consultas" role="search">
+  <label class="adm-buscar">
+    <span class="sr-only">Buscar</span>
+    <%- icono('search') %>
+    <input type="search" name="q" value="<%= filtros.q %>" placeholder="Buscar nombre, teléfono o vehículo" autocomplete="off">
+  </label>
+  <div class="pestanas" role="group" aria-label="Filtrar por estado">
+    <button type="submit" name="estado" value="" class="pestana <%= !filtros.estado ? 'activo' : '' %>">Todas <b><%= cuenta.total %></b></button>
+    <% estados.forEach(e => { %>
+      <button type="submit" name="estado" value="<%= e %>" class="pestana <%= filtros.estado === e ? 'activo' : '' %>"><%= textos[e] %> <b <%- e === 'nueva' ? 'data-contador-consultas' : '' %>><%= cuenta[e] %></b></button>
+    <% }) %>
+  </div>
+</form>
+
+<% if (!lista.length) { %>
+  <div class="vacio">
+    <%- icono('inbox') %>
+    <h2><%= filtros.estado || filtros.q ? 'No hay consultas con ese filtro' : 'Todavía no llegaron consultas' %></h2>
+    <p>Cuando alguien complete “Consultar con asesor” en la web, aparece acá.</p>
+  </div>
+<% } else { %>
+  <ul class="consultas">
+    <% lista.forEach(c => {
+         const tel = c.telefono.replace(/[^\d]/g, '');
+         const wa = (tel.startsWith('54') ? tel : '549' + tel.replace(/^0/, ''));
+         const saludo = encodeURIComponent(`Hola ${c.nombre}! Te escribo de ${concesionaria.nombre} por tu consulta: ${c.motivo}.`);
+    %>
+      <li class="consulta consulta--<%= c.estado %>" id="consulta-<%= c.id %>" data-id="<%= c.id %>">
+        <div class="consulta__cab">
+          <div>
+            <strong class="consulta__nombre"><%= c.nombre %></strong>
+            <time datetime="<%= new Date(c.creado_en).toISOString() %>"><%= formatoFecha(c.creado_en) %></time>
+          </div>
+          <label class="consulta__estado">
+            <span class="sr-only">Estado</span>
+            <select data-estado class="estado-select estado-select--<%= c.estado %>">
+              <% estados.forEach(e => { %><option value="<%= e %>" <%= c.estado === e ? 'selected' : '' %>><%= e === 'nueva' ? 'Nueva' : e === 'contactado' ? 'Contactado' : 'Cerrada' %></option><% }) %>
+            </select>
+          </label>
+        </div>
+
+        <p class="consulta__motivo">
+          <%- icono('car') %>
+          <% if (c.vehiculo) { %>
+            <a href="/admin/vehiculos/<%= c.vehiculo.id %>/editar"><%= c.motivo %></a>
+          <% } else { %>
+            <span><%= c.motivo %></span>
+          <% } %>
+        </p>
+        <% if (c.mensaje) { %><p class="consulta__mensaje">“<%= c.mensaje %>”</p><% } %>
+
+        <label class="consulta__nota">
+          <span class="sr-only">Nota interna</span>
+          <textarea data-nota rows="1" maxlength="500" placeholder="Nota interna (ej: quedó en venir el sábado)"><%= c.nota || '' %></textarea>
+        </label>
+
+        <div class="consulta__acciones">
+          <a href="https://wa.me/<%= wa %>?text=<%= saludo %>" target="_blank" rel="noopener" class="btn btn--verde btn--chico" data-contactar><%- icono('message-circle') %>WhatsApp</a>
+          <a href="tel:<%= tel %>" class="btn btn--gris btn--chico"><%- icono('phone') %><%= c.telefono %></a>
+          <button type="button" class="icono-btn icono-btn--peligro" data-borrar-consulta aria-label="Eliminar consulta de <%= c.nombre %>"><%- icono('trash') %></button>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include('../partials/admin-fin', { scriptAdmin: 'admin-consultas' }) %>

@@ -1,0 +1,61 @@
+<%# Armazón del panel. Cada vista lo abre con admin-inicio y lo cierra con admin-fin %>
+<% const sec = locals.seccion || ''; const nuevas = locals.consultasNuevas || 0;
+   const items = [
+     ['dashboard', '/admin', 'Resumen', 'gauge', 0],
+     ['vehiculos', '/admin/vehiculos', 'Vehículos', 'car', 0],
+     ['consultas', '/admin/consultas', 'Consultas', 'message-circle', nuevas],
+     ['clientes', '/admin/clientes', 'Clientes', 'image', 0],
+     ['cuenta', '/admin/cuenta', 'Mi cuenta', 'user', 0],
+   ];
+%>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#03175c">
+  <title><%= titulo %> | Panel · <%= concesionaria.nombre %></title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>document.addEventListener('error', function (e) { var i = e.target; if (i.tagName === 'IMG' && !i.dataset.sinFoto) { i.dataset.sinFoto = '1'; i.src = '/img/sin-foto.svg'; } }, true);</script>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="adm-body">
+<a href="#contenido" class="saltar">Saltar al contenido</a>
+
+<div class="adm">
+  <%# Barra superior %>
+  <header class="adm-top">
+    <a href="/admin" class="adm-marca" aria-label="Panel — inicio">
+      <%- include('logo', { chico: true }) %>
+      <small>Panel</small>
+    </a>
+    <div class="adm-top__der">
+      <a href="/" class="adm-top__link" target="_blank" rel="noopener" title="Ver la web">
+        <%- icono('external') %><span>Ver la web</span>
+      </a>
+      <form action="/admin/logout" method="POST" class="adm-top__salir">
+        <button type="submit" class="adm-top__link" title="Cerrar sesión"><%- icono('logout') %><span>Salir</span></button>
+      </form>
+    </div>
+  </header>
+
+  <%# Menú: lateral en PC, barra inferior en celular %>
+  <nav class="adm-nav" aria-label="Menú del panel">
+    <% items.forEach(([k, url, nombre, ic, n]) => { %>
+      <a href="<%= url %>" class="<%= sec === k ? 'activo' : '' %>" <%- sec === k ? 'aria-current="page"' : '' %>>
+        <span class="adm-nav__icono"><%- icono(ic) %><% if (n) { %><b class="adm-nav__n" data-contador-consultas><%= n %></b><% } %></span>
+        <span class="adm-nav__texto"><%= nombre %></span>
+      </a>
+    <% }) %>
+    <div class="adm-nav__usuario">
+      <span class="adm-nav__inicial"><%= usuario.nombre.charAt(0).toUpperCase() %></span>
+      <span><%= usuario.nombre %><small><%= usuario.email %></small></span>
+    </div>
+  </nav>
+
+  <main class="adm-main" id="contenido">

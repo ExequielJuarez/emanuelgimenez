@@ -1,0 +1,41 @@
+<%# Tarjeta de una unidad en la grilla "Vehículos disp.". Recibe: v, i (posición en el orden destacado) %>
+<article class="tarjeta"
+  data-id="<%= v.id %>"
+  data-orden="<%= i %>"
+  data-texto="<%= `${v.marca} ${v.modelo} ${v.segmento} ${v.anio}` %>"
+  data-marca="<%= v.marca %>"
+  data-anio="<%= v.anio %>"
+  data-precio="<%= v.precio %>">
+  <button type="button" class="tarjeta__foto" data-ficha="<%= v.id %>" aria-label="Ver ficha: <%= v.marca %> <%= v.modelo %>">
+    <img src="<%= v.imagen %>" alt="<%= v.marca %> <%= v.modelo %> <%= v.anio %>" loading="lazy" decoding="async" width="900" height="600">
+    <span class="tarjeta__chips">
+      <span class="chip chip--oscuro"><%= v.anio %></span>
+      <span class="chip <%= v.condicion === '0km' ? 'chip--naranja' : 'chip--blanco' %>"><%= v.condicion %></span>
+    </span>
+  </button>
+
+  <div class="tarjeta__cuerpo">
+    <div class="tarjeta__titulo" data-ficha="<%= v.id %>">
+      <span class="sobretitulo"><%= v.marca %> &bull; <%= v.segmento %></span>
+      <h3><button type="button"><%= v.modelo %></button></h3>
+    </div>
+
+    <ul class="tarjeta__datos">
+      <li><%= formatoKm(v.km) %></li>
+      <li><%= v.transmision %></li>
+      <li><%= v.combustible %></li>
+    </ul>
+
+    <div class="tarjeta__precio">
+      <div>
+        <span>Precio Contado</span>
+        <strong><%= formatoPrecio(v.precio) %></strong>
+      </div>
+      <button type="button" class="link-azul" data-ficha="<%= v.id %>">Ver ficha<%- icono('chevron-right') %></button>
+    </div>
+  </div>
+
+  <div class="tarjeta__pie">
+    <button type="button" class="btn btn--naranja btn--bloque btn--grande" data-asesor="<%= motivoVehiculo(v) %>" data-vehiculo="<%= v.id %>"><%- icono('message-circle') %>Consultar con asesor</button>
+  </div>
+</article>

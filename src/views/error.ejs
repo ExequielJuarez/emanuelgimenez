@@ -1,0 +1,14 @@
+<%- include('partials/head', { estilo: 'error' }) %>
+<%- include('partials/header') %>
+
+<section class="contenedor error">
+  <span class="error__codigo"><%= locals.codigo || 404 %></span>
+  <h1><%= titulo %></h1>
+  <p><%= mensaje %></p>
+  <div class="error__botones">
+    <a href="/" class="btn btn--azul"><%- icono('arrow-left') %>Volver al inicio</a>
+    <a href="/#vehiculos-disp" class="btn btn--naranja"><%- icono('car') %>Ver stock</a>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,68 @@
+<%- include('../partials/admin-inicio') %>
+
+<div class="adm-cab">
+  <div>
+    <h1>Clientes</h1>
+    <p>Fotos de entregas que se ven al final del inicio (“Familias que confían en nosotros”).</p>
+  </div>
+</div>
+
+<section class="panel">
+  <h2 class="panel__titulo">Agregar fotos</h2>
+  <form action="/admin/clientes" method="POST" enctype="multipart/form-data" class="subir-clientes" id="formClientes">
+    <label class="subir" id="zonaClientes">
+      <input type="file" name="imagenes" accept="image/jpeg,image/png,image/webp" multiple required id="campoClientes">
+      <%- icono('upload') %>
+      <strong>Elegir fotos</strong>
+      <span id="elegidasClientes">JPG, PNG o WEBP de hasta 4 MB (hasta 12 a la vez)</span>
+    </label>
+    <label class="campo">
+      <span>Título <em>(opcional, ej: Familia Orce)</em></span>
+      <input type="text" name="titulo" maxlength="80" placeholder="Familia ...">
+    </label>
+    <button type="submit" class="btn btn--naranja"><%- icono('upload') %>Subir</button>
+  </form>
+</section>
+
+<% if (!fotos.length) { %>
+  <div class="vacio" style="margin-top:1rem">
+    <%- icono('image') %>
+    <h2>Todavía no hay fotos de clientes</h2>
+    <p>Mientras no haya fotos, la sección no se muestra en la web.</p>
+  </div>
+<% } else { %>
+  <ul class="clientes-adm" id="listaClientes">
+    <% fotos.forEach((f, i) => { %>
+      <li class="cliente-adm <%= f.publicado ? '' : 'cliente-adm--oculto' %>" data-id="<%= f.id %>">
+        <div class="cliente-adm__foto">
+          <% if (f.existe) { %>
+            <img src="<%= f.url %>" alt="<%= f.titulo || 'Foto de cliente' %>" loading="lazy">
+          <% } else { %>
+            <div class="cliente-adm__falta">
+              <%- icono('alert') %>
+              <strong>Falta el archivo</strong>
+              <code><%= f.url %></code>
+              <span>Guardalo en esa carpeta o borrá esta foto y subila de nuevo.</span>
+            </div>
+          <% } %>
+        </div>
+        <label class="cliente-adm__titulo">
+          <span class="sr-only">Título</span>
+          <input type="text" value="<%= f.titulo || '' %>" maxlength="80" placeholder="Título (opcional)" data-titulo>
+        </label>
+        <div class="cliente-adm__acciones">
+          <button type="button" class="switch" role="switch" aria-checked="<%= f.publicado %>" data-publicar>
+            <span class="switch__pista"><span class="switch__bola"></span></span><span>Visible</span>
+          </button>
+          <span class="cliente-adm__mover">
+            <button type="button" class="icono-btn" data-mover="-1" aria-label="Mover antes" <%= i === 0 ? 'disabled' : '' %>><%- icono('chevron-left') %></button>
+            <button type="button" class="icono-btn" data-mover="1" aria-label="Mover después" <%= i === fotos.length - 1 ? 'disabled' : '' %>><%- icono('chevron-right') %></button>
+          </span>
+          <button type="button" class="icono-btn icono-btn--peligro" data-borrar aria-label="Eliminar foto"><%- icono('trash') %></button>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include('../partials/admin-fin', { scriptAdmin: 'admin-clientes' }) %>

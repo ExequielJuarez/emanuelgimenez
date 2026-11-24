@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title><%= concesionaria.nombre %> | <%= titulo %></title>
+  <meta name="description" content="<%= locals.descripcion || 'Emanuel Gimenez Automotores: usados seleccionados y 0km multimarca. Tomamos tu usado en parte de pago y financiamos hasta en 48 cuotas fijas.' %>">
+  <meta name="theme-color" content="#062896">
+  <meta property="og:title" content="<%= concesionaria.nombre %> | <%= titulo %>">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/img/portada/portada.webp">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <%# Si una foto no existe, se muestra la imagen neutra de "sin foto" %>
+  <script>document.addEventListener('error', function (e) { var i = e.target; if (i.tagName === 'IMG' && !i.dataset.sinFoto) { i.dataset.sinFoto = '1'; i.src = '/img/sin-foto.svg'; } }, true);</script>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <%# estilo puede ser un nombre o una lista: "inicio" o ["inicio", "otra"] %>
+  <% [].concat(locals.estilo || []).forEach(hoja => { %>
+    <link rel="stylesheet" href="/css/<%= hoja %>.css">
+  <% }) %>
+</head>
+<body>

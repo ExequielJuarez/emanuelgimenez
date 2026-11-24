@@ -1,0 +1,45 @@
+<a href="#contenido" class="saltar">Saltar al contenido</a>
+
+<%# ═════════ Header fijo ═════════ %>
+<header class="header" id="header">
+  <div class="contenedor header__barra">
+    <a href="/#inicio" class="marca-link" data-vista-inicio aria-label="<%= concesionaria.nombre %> — Inicio"><%- include('logo') %></a>
+
+    <nav class="nav" aria-label="Principal">
+      <a href="/#inicio" class="activo" data-vista-inicio>Inicio</a>
+      <a href="/#destacados" data-vista-inicio>Destacados</a>
+      <a href="/#vehiculos-disp" data-ver-todo>Vehículos Disponibles</a>
+      <a href="/#consignaciones">Vender mi Auto</a>
+    </nav>
+
+    <div class="header__acciones">
+      <button type="button" class="btn btn--naranja btn--pildora header__asesor" data-asesor="Asesoramiento Comercial">
+        <%- icono('message-circle') %><span>Consultar<span class="header__asesor-extra"> con asesor</span></span>
+      </button>
+      <button type="button" class="icono-btn header__menu-btn" id="btnMenu" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer">
+        <%- icono('menu') %>
+      </button>
+    </div>
+  </div>
+</header>
+
+<%# ═════════ Menú del celular ═════════ %>
+<div class="drawer-fondo" id="drawerFondo" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Menú" aria-hidden="true" inert>
+  <div class="drawer__cab">
+    <a href="/#inicio" data-vista-inicio aria-label="Inicio"><%- include('logo', { chico: true }) %></a>
+    <button type="button" class="icono-btn" id="drawerCerrar" aria-label="Cerrar menú"><%- icono('x') %></button>
+  </div>
+  <nav class="drawer__lista" aria-label="Secciones">
+    <a href="/#inicio" data-vista-inicio>Inicio<%- icono('chevron-right') %></a>
+    <a href="/#destacados" data-vista-inicio>Destacados<%- icono('chevron-right') %></a>
+    <a href="/#vehiculos-disp" data-ver-todo>Vehículos Disponibles<%- icono('chevron-right') %></a>
+    <a href="/#consignaciones">Vender mi Auto<%- icono('chevron-right') %></a>
+  </nav>
+  <button type="button" class="btn btn--naranja btn--bloque" data-asesor="Asesoramiento Comercial"><%- icono('message-circle') %>Consultar con asesor</button>
+  <div class="drawer__pie">
+    <span><%- icono('clock') %><%= concesionaria.horarios %> &bull; <%= concesionaria.sabados %></span>
+  </div>
+</aside>
+
+<main id="contenido">

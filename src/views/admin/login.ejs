@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#062896">
+  <title><%= titulo %> | Panel · <%= concesionaria.nombre %></title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="login-body">
+  <main class="login">
+    <a href="/" class="login__marca" aria-label="Ir a la web"><%- include('../partials/logo') %></a>
+
+    <form class="login__caja" action="/admin/login" method="POST" novalidate>
+      <div class="login__cab">
+        <span class="login__candado"><%- icono('lock') %></span>
+        <h1>Panel de administración</h1>
+        <p>Ingresá para cargar vehículos y ver las consultas.</p>
+      </div>
+
+      <% if (error) { %><p class="login__error" role="alert"><%- icono('alert') %><%= error %></p><% } %>
+
+      <input type="hidden" name="volver" value="<%= volver %>">
+      <label class="campo">
+        <span>Usuario</span>
+        <input type="text" name="email" value="<%= email %>" required autocomplete="username" autocapitalize="none" spellcheck="false" <%= email ? '' : 'autofocus' %>>
+      </label>
+      <label class="campo">
+        <span>Clave</span>
+        <span class="campo-clave">
+          <input type="password" name="clave" required autocomplete="current-password" id="campoClave" <%= email ? 'autofocus' : '' %>>
+          <button type="button" class="campo-clave__ver" data-ver-clave="campoClave" aria-label="Mostrar clave"><%- icono('eye') %></button>
+        </span>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="recordar" value="1">
+        <span>Mantener la sesión iniciada en este dispositivo</span>
+      </label>
+
+      <button type="submit" class="btn btn--naranja btn--bloque btn--grande">Ingresar</button>
+    </form>
+
+    <a href="/" class="login__volver"><%- icono('arrow-left') %>Volver a la web</a>
+  </main>
+  <script>
+    // Mostrar / ocultar la clave
+    document.querySelectorAll('[data-ver-clave]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = document.getElementById(b.dataset.verClave);
+        var ver = i.type === 'password';
+        i.type = ver ? 'text' : 'password';
+        b.setAttribute('aria-label', ver ? 'Ocultar clave' : 'Mostrar clave');
+        b.classList.toggle('activo', ver);
+      });
+    });
+  </script>
+</body>
+</html>

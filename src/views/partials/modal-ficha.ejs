@@ -1,0 +1,40 @@
+<%# ═════════ Modal "Ficha de la unidad" (lo completa js/inicio.js con los datos de #datosFichas) ═════════ %>
+<div class="modal" id="modalFicha" role="dialog" aria-modal="true" aria-labelledby="fichaTitulo" hidden>
+  <div class="modal__caja ficha">
+    <div class="ficha__foto">
+      <img id="fichaImg" src="" alt="" width="900" height="600">
+      <button type="button" class="ficha__cerrar" data-cerrar aria-label="Cerrar ficha"><%- icono('x') %></button>
+      <span class="ficha__etiqueta" id="fichaEtiqueta"></span>
+
+      <%# Galería: flechas y contador (solo si la unidad tiene más de una foto) %>
+      <div class="ficha__galeria" id="fichaGaleria" hidden>
+        <button type="button" class="ficha__flecha ficha__flecha--izq" data-foto="-1" aria-label="Foto anterior"><%- icono('chevron-left') %></button>
+        <button type="button" class="ficha__flecha ficha__flecha--der" data-foto="1" aria-label="Foto siguiente"><%- icono('chevron-right') %></button>
+        <span class="ficha__contador" id="fichaContador" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="ficha__cuerpo">
+      <div class="ficha__cab">
+        <div>
+          <h3 id="fichaTitulo"></h3>
+          <p id="fichaSub" class="ficha__sub"></p>
+        </div>
+        <p id="fichaPrecio" class="ficha__precio"></p>
+      </div>
+
+      <div class="ficha__datos">
+        <div><span>Kilometraje</span><strong id="fichaKm"></strong></div>
+        <div><span>Transmisión</span><strong id="fichaTrans"></strong></div>
+        <div><span>Combustible</span><strong id="fichaComb"></strong></div>
+      </div>
+
+      <p id="fichaDesc" class="ficha__desc"></p>
+
+      <div class="ficha__botones">
+        <button type="button" class="btn btn--naranja ficha__asesor" id="fichaAsesor"><%- icono('message-circle') %>Consultar con asesor</button>
+        <button type="button" class="btn btn--gris" data-cerrar>Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

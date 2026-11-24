@@ -1,0 +1,40 @@
+<%- include('../partials/admin-inicio') %>
+
+<div class="adm-cab">
+  <div>
+    <h1>Mi cuenta</h1>
+    <p><%= usuario.nombre %> &bull; <%= usuario.email %></p>
+  </div>
+</div>
+
+<div class="adm-grilla-2">
+  <section class="panel">
+    <h2 class="panel__titulo">Cambiar clave</h2>
+    <form action="/admin/clave" method="POST" class="campos campos--uno" autocomplete="off">
+      <input type="text" name="usuario" value="<%= usuario.email %>" autocomplete="username" hidden>
+      <label class="campo">
+        <span>Clave actual</span>
+        <input type="password" name="actual" required autocomplete="current-password">
+      </label>
+      <label class="campo">
+        <span>Clave nueva <em>(mínimo 8 caracteres)</em></span>
+        <input type="password" name="nueva" required minlength="8" autocomplete="new-password">
+      </label>
+      <label class="campo">
+        <span>Repetir clave nueva</span>
+        <input type="password" name="repetir" required minlength="8" autocomplete="new-password">
+      </label>
+      <button type="submit" class="btn btn--naranja"><%- icono('lock') %>Guardar clave</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel__titulo">Sesión</h2>
+    <p class="panel__ayuda">Si usaste el panel en una compu que no es tuya, cerrá la sesión al terminar.</p>
+    <form action="/admin/logout" method="POST">
+      <button type="submit" class="btn btn--gris"><%- icono('logout') %>Cerrar sesión</button>
+    </form>
+  </section>
+</div>
+
+<%- include('../partials/admin-fin') %>

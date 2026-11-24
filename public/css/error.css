@@ -1,0 +1,30 @@
+/* Página de error (404 / 500) */
+.error {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  text-align: center;
+}
+.error__codigo {
+  font-family: var(--fuente-racing);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(4rem, 20vw, 7rem);
+  line-height: 1;
+  color: var(--naranja);
+}
+.error h1 {
+  font-family: var(--fuente-racing);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: 1.75rem;
+  color: var(--azul-oscuro);
+}
+.error p { color: var(--texto-suave); max-width: 28rem; }
+.error__botones { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1rem; }

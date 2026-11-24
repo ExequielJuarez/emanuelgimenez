@@ -1,0 +1,69 @@
+<%- include('../partials/admin-inicio') %>
+
+<div class="adm-cab">
+  <div>
+    <h1>Vehículos</h1>
+    <p><%= stock.publicados %> publicados &bull; <%= stock.destacados %> destacados &bull; <%= stock.ocultos %> ocultos</p>
+  </div>
+  <a href="/admin/vehiculos/nuevo" class="btn btn--naranja"><%- icono('plus') %>Nuevo vehículo</a>
+</div>
+
+<form class="adm-filtros" method="GET" action="/admin/vehiculos" role="search">
+  <label class="adm-buscar">
+    <span class="sr-only">Buscar</span>
+    <%- icono('search') %>
+    <input type="search" name="q" value="<%= filtros.q %>" placeholder="Buscar marca, modelo o segmento" autocomplete="off">
+  </label>
+  <div class="pestanas" role="group" aria-label="Filtrar">
+    <% [['', 'Todos'], ['publicados', 'Publicados'], ['destacados', 'Destacados'], ['ocultos', 'Ocultos']].forEach(([val, txt]) => { %>
+      <button type="submit" name="estado" value="<%= val %>" class="pestana <%= filtros.estado === val ? 'activo' : '' %>"><%= txt %></button>
+    <% }) %>
+  </div>
+</form>
+
+<% if (!lista.length) { %>
+  <div class="vacio">
+    <%- icono('car') %>
+    <h2><%= filtros.q || filtros.estado ? 'No hay vehículos con ese filtro' : 'Todavía no cargaste vehículos' %></h2>
+    <% if (filtros.q || filtros.estado) { %>
+      <a href="/admin/vehiculos" class="btn btn--gris">Ver todos</a>
+    <% } else { %>
+      <a href="/admin/vehiculos/nuevo" class="btn btn--naranja"><%- icono('plus') %>Cargar el primero</a>
+    <% } %>
+  </div>
+<% } else { %>
+  <ul class="autos">
+    <% lista.forEach(v => { %>
+      <li class="auto <%= v.publicado ? '' : 'auto--oculto' %>" id="vehiculo-<%= v.id %>" data-id="<%= v.id %>">
+        <a href="/admin/vehiculos/<%= v.id %>/editar" class="auto__foto" aria-label="Editar <%= v.marca %> <%= v.modelo %>">
+          <img src="<%= v.imagen %>" alt="" loading="lazy" width="160" height="110">
+          <% if (v.imagenes.length > 1) { %><span class="auto__fotos"><%- icono('image') %><%= v.imagenes.length %></span><% } %>
+        </a>
+        <div class="auto__info">
+          <a href="/admin/vehiculos/<%= v.id %>/editar" class="auto__titulo">
+            <span class="sobretitulo"><%= v.marca %> &bull; <%= v.segmento %></span>
+            <strong><%= v.modelo %></strong>
+          </a>
+          <span class="auto__datos"><%= v.anio %> &bull; <%= formatoKm(v.km) %> &bull; <%= v.condicion %></span>
+          <span class="auto__precio"><%= formatoPrecio(v.precio) %></span>
+        </div>
+        <div class="auto__switches">
+          <button type="button" class="switch" role="switch" aria-checked="<%= v.publicado %>" data-alternar="publicado">
+            <span class="switch__pista"><span class="switch__bola"></span></span><span>Publicado</span>
+          </button>
+          <button type="button" class="switch switch--naranja" role="switch" aria-checked="<%= v.destacado %>" data-alternar="destacado">
+            <span class="switch__pista"><span class="switch__bola"></span></span><span>Destacado</span>
+          </button>
+        </div>
+        <div class="auto__acciones">
+          <a href="/admin/vehiculos/<%= v.id %>/editar" class="btn btn--gris btn--chico"><%- icono('edit') %>Editar</a>
+          <form action="/admin/vehiculos/<%= v.id %>?_method=DELETE" method="POST" data-confirmar="Se va a borrar «<%= v.marca %> <%= v.modelo %>» con todas sus fotos. Si solo se vendió, podés ocultarlo en vez de borrarlo.">
+            <button type="submit" class="icono-btn icono-btn--peligro" aria-label="Eliminar <%= v.marca %> <%= v.modelo %>"><%- icono('trash') %></button>
+          </form>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include('../partials/admin-fin') %>
